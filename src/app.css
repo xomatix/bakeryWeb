@@ -1,0 +1,45 @@
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.preact:hover {
+  filter: drop-shadow(0 0 2em #673ab8aa);
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+table {
+  width: 100%;
+}
+
+th {
+  border: #9050b4aa 2px solid;
+  background: #8f50b427;
+  padding: 10px;
+}
+
+td {
+  border: #9050b4aa 2px solid;
+  padding: 10px;
+}
+
+.addItem > input{
+  padding: 5px;
+  font-size: large;
+}
