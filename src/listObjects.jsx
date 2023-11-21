@@ -64,8 +64,8 @@ const ListObjects = ({ dataType, id }) => {
                 customHeaders = 'bread_id,bread_name,bread_category_id,price'
                 break;
             case 6:
-                q = `select recipe_element_id,re.ingredient_id,re.amount ,re.amount_unit ,ingredient_name from recipe_element re join ingredients i on re.ingredient_id =i.ingredient_id  where bread_id = ${id}`;
-                obj = 'recipe_element_id,ingredient_id,amount,amount_unit,ingredient_name'
+                q = `select recipe_element_id,re.ingredient_id,re.amount ,re.amount_unit ,ingredient_name, b.bread_name  from recipe_element re join ingredients i on re.ingredient_id =i.ingredient_id join breads b on b.bread_id = re.bread_id  where re.bread_id =  ${id}`;
+                obj = 'recipe_element_id,ingredient_id,amount,amount_unit,ingredient_name,bread_name'
                 customHeaders = 'recipe_element_id,ingredient_id,amount,amount_unit'
                 break;
             case 7:
@@ -114,6 +114,8 @@ const ListObjects = ({ dataType, id }) => {
                 // })
                 setHeaders(customHeaders != '' ? customHeaders.split(',') : Object.keys(d.at(0)))
                 //console.log(headers.map(x => { return <tr>{x}</tr> }))
+
+                // console.log(d[0])
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
@@ -139,12 +141,12 @@ const ListObjects = ({ dataType, id }) => {
             {dataType == 7 && <Link href={`/orders/add`}><button >➕</button></Link>}
             {(dataType == 8 && id != undefined) && <Link href={`/orders/${id}/add`}><button >➕</button></Link>}
 
+            {(dataType == 6 && data.length > 0 ) && <h1>Bread name: {data[0].bread_name}</h1>}
             <table>
                 <tr>
                     {headers.map(x => { return <th>{x}</th> })}
-
                 </tr>
-
+                
                 {dataType == 0 && <>
                     {data.map(x => {
                         return <tr className="searchItem"><td>{x.client_id}</td> <td>{x.client_name}</td> <td>{x.client_address}</td>
@@ -157,7 +159,9 @@ const ListObjects = ({ dataType, id }) => {
                 {dataType == 1 && <>
                     {data.map(x => {
                         return <tr className="searchItem"><td>{x.staff_id}</td> <td>{x.name}</td> <td>{x.surname}</td>
-                            <td>{x.email}</td><td><DeleteObject id={x.staff_id} dataType={1} /></td></tr>
+                            <td>{x.email}</td>
+                            {/* <td><DeleteObject id={x.staff_id} dataType={1} /></td> */}
+                            </tr>
                     })}
                 </>}
 

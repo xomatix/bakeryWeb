@@ -42,10 +42,10 @@ const DeleteObject = ({id, dataType}) => {
                 q += `breads where bread_id=${id};`
                 break;
             case 6:
-                q += `recipe_element where recipe_element=${id};`
+                q += `recipe_element where recipe_element_id=${id};`
                 break;
             case 7:
-                q += `orders where order_id=${id};`
+                q += `order_element where order_id=${id}; delete from orders where order_id=${id};`
                 break;
             case 8:
                 q += `order_element where order_elem_id=${id};`

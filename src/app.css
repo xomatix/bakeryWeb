@@ -9,9 +9,11 @@
   height: 6em;
   padding: 1.5em;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.preact:hover {
   filter: drop-shadow(0 0 2em #673ab8aa);
 }
@@ -24,6 +26,7 @@
   color: #888;
 }
 
+
 table {
   width: 100%;
 }
@@ -31,27 +34,57 @@ table {
 td {
   /* border: #9050b4aa 2px solid; */
   padding: 10px;
-} 
+}
 
 th {
-  background-color: #2d2d2d; /* Dark background color */
-  color: #ffffff; /* Light text color */
+  background-color: #2d2d2d;
+  /* Dark background color */
+  color: #ffffff;
+  /* Light text color */
   padding: 12px;
   text-align: left;
 }
 
 /* Dark mode styles for table row */
 tr {
-  background-color: #1f1f1f; /* Dark background color for alternate rows */
-  color: #ffffff; /* Light text color */
+  background-color: #1f1f1f;
+  /* Dark background color for alternate rows */
+  color: #ffffff;
+  /* Light text color */
 }
 
 /* Add hover effect for rows */
 tr:hover {
-  background-color: #353535; /* Slightly lighter background color on hover */
+  background-color: #3d3d3d;
+  border: none;
+  /* transition: all 0.3s ease-in-out; */
+  /* scale: 1.02; */
+  box-shadow: 0px 0px 21px 0px rgb(24, 25, 26);
 }
 
-.addItem > input{
+button {
+  background-color: #2d2d2d;
+  /* Dark background color */
+  color: #ffffff;
+  /* Light text color */
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  /* Smooth transition for hover effect */
+}
+
+/* Hover effect for the button */
+button:hover {
+  background-color: #3d3d3d;
+  /* Slightly lighter background color on hover */
+  border: none;
+  /* scale: 1.1; */
+  box-shadow: 0px 0px 21px 0px rgb(24, 25, 26);
+  transition: all 0.5s;
+}
+
+.addItem>input {
   padding: 5px;
   font-size: large;
 }
@@ -66,7 +99,7 @@ tr:hover {
   font-size: large;
 }
 
-.searchBox > input {
+.searchBox>input {
   margin: 0;
   padding: 3px;
   width: 100%;
