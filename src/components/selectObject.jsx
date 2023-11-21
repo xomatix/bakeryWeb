@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
+import SearchBox from "./searchBox";
 
 
 const SelectObject = ({ objectType, onClickFunction, index }) => {
@@ -128,9 +129,9 @@ const SelectObject = ({ objectType, onClickFunction, index }) => {
                 <p style={{ marginLeft: '10px' }}>ID: {value}</p>
             </div>
             {isVisible && (
-                <div style={{ minWidth: '30%', display: 'block', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px', background: '#131f29', boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)' }}>
+                <div style={{ minWidth: '30%', display: 'block', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px', background: '#1e1e1e', boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)' }}>
                     <p>object Type: {objectType}</p>
-
+                    <SearchBox></SearchBox>
                     <table>
                         <tr>
                             {headers.map(x => { return <th>{x}</th> })}
@@ -139,27 +140,27 @@ const SelectObject = ({ objectType, onClickFunction, index }) => {
 
 
                         {objectType == 0 && data.map((x, index) => {
-                            return <tr><td className="addItem">{x.client_id}</td> <td className="addItem">{x.client_name}</td>
+                            return <tr className="searchItem"><td className="addItem">{x.client_id}</td> <td className="addItem">{x.client_name}</td>
                                 <button onClick={() => { handleCloseButtonClick(x.client_id, x.client_name) }}>🗝️</button></tr>
                         })}
 
                         {objectType == 1 && data.map((x, index) => {
-                            return <tr><td className="addItem">{x.staff_id}</td> <td className="addItem">{x.name_surname}</td>
+                            return <tr className="searchItem"><td className="addItem">{x.staff_id}</td> <td className="addItem">{x.name_surname}</td>
                                 <button onClick={() => { handleCloseButtonClick(x.staff_id, x.name_surname) }}>🗝️</button></tr>
                         })}
 
                         {objectType == 2 && data.map((x, index) => {
-                            return <tr><td className="addItem">{x.bread_category_id}</td> <td className="addItem">{x.bread_category_name}</td>
+                            return <tr className="searchItem"><td className="addItem">{x.bread_category_id}</td> <td className="addItem">{x.bread_category_name}</td>
                                 <button onClick={() => { handleCloseButtonClick(x.bread_category_id, x.bread_category_name) }}>🗝️</button></tr>
                         })}
 
                         {objectType == 3 && data.map((x, index) => {
-                            return <tr><td className="addItem">{x.ingredient_id}</td> <td className="addItem">{x.ingredient_name}</td>
+                            return <tr className="searchItem"><td className="addItem">{x.ingredient_id}</td> <td className="addItem">{x.ingredient_name}</td>
                                 <button onClick={() => { handleCloseButtonClick(x.ingredient_id, x.ingredient_name) }}>🗝️</button></tr>
                         })}
 
                         {objectType == 5 && data.map((x, index) => {
-                            return <tr><td className="addItem">{x.bread_id}</td> <td className="addItem">{x.bread_name}</td>
+                            return <tr className="searchItem"><td className="addItem">{x.bread_id}</td> <td className="addItem">{x.bread_name}</td>
                                 <button onClick={() => { handleCloseButtonClick(x.bread_id, x.bread_name) }}>🗝️</button></tr>
                         })}
 

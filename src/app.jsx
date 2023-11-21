@@ -66,7 +66,7 @@ export function App() {
         </Router>
 
       </div>
-      <h1>Vite + Preact</h1>
+      {/* <h1>Vite + Preact</h1> */}
   
     </>
   )

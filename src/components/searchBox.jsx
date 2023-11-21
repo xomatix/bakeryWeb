@@ -10,13 +10,14 @@ const SearchBox = () => {
         window.addEventListener('keypress', (e) => {
             //e.preventDefault();
             if (e.key == '-') {
+
                 toggleInputVisibility()
+                handleFilterChange("");
             }
 
             if (e.key == 'Enter') {
                 
                 
-                // handleFilterChange("");
                 
                 toggleInputVisibility()
 

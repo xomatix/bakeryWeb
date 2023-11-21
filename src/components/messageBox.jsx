@@ -22,7 +22,7 @@ const MessageBox = ({ dataType, query }) => {
 
     return (
         <div>
-            <div style={{ display: isDivVisible ? 'block' : 'none', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px', background: '#131f29', boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)' }}>
+            <div style={{ display: isDivVisible ? 'block' : 'none', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px', background: '#1e1e1e', boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)' }}>
                 <p>DataType: {dataType}</p>
                 <p>SQL: {query}</p>
                 <button onClick={handleCloseClick}>Close</button>

@@ -28,15 +28,27 @@ table {
   width: 100%;
 }
 
-th {
-  border: #9050b4aa 2px solid;
-  background: #8f50b427;
+td {
+  /* border: #9050b4aa 2px solid; */
   padding: 10px;
+} 
+
+th {
+  background-color: #2d2d2d; /* Dark background color */
+  color: #ffffff; /* Light text color */
+  padding: 12px;
+  text-align: left;
 }
 
-td {
-  border: #9050b4aa 2px solid;
-  padding: 10px;
+/* Dark mode styles for table row */
+tr {
+  background-color: #1f1f1f; /* Dark background color for alternate rows */
+  color: #ffffff; /* Light text color */
+}
+
+/* Add hover effect for rows */
+tr:hover {
+  background-color: #353535; /* Slightly lighter background color on hover */
 }
 
 .addItem > input{
