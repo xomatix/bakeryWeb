@@ -2,6 +2,18 @@ import { useEffect, useState } from "preact/hooks";
 
 
 const SelectObject = ({ objectType, onClickFunction, index }) => {
+
+    //dataType 
+    // 0 clients
+    // 1 staff
+    // 2 bread_categories
+    // 3 ingredients
+    // 4 stock
+    // 5 breads
+    // 6 recipe_element
+    // 7 orders
+    // 8 order_element
+
     const [isVisible, setIsVisible] = useState(false);
     const [data, setData] = useState([]);
     const [headers, setHeaders] = useState([]);
@@ -130,7 +142,7 @@ const SelectObject = ({ objectType, onClickFunction, index }) => {
                             return <tr><td className="addItem">{x.client_id}</td> <td className="addItem">{x.client_name}</td>
                                 <button onClick={() => { handleCloseButtonClick(x.client_id, x.client_name) }}>🗝️</button></tr>
                         })}
-                        
+
                         {objectType == 1 && data.map((x, index) => {
                             return <tr><td className="addItem">{x.staff_id}</td> <td className="addItem">{x.name_surname}</td>
                                 <button onClick={() => { handleCloseButtonClick(x.staff_id, x.name_surname) }}>🗝️</button></tr>
