@@ -23,6 +23,8 @@ import AddRecipeElement from './routes/addRecipeElement'
 import AddBread from './routes/addBread'
 import AddOrderElement from './routes/addOrderElement'
 import AddOrder from './routes/addOrder'
+import MinimalStock from './routes/mnimalStock'
+import AddMinimalStock from './routes/addMinimalStock'
 
 export function App() {
 
@@ -54,6 +56,9 @@ export function App() {
           <StockList path="/stock" />
           <AddStock path="/stock/add" />
 
+          <MinimalStock path="/minimal_stock" />	
+          <AddMinimalStock path="/minimal_stock/add" />	
+
           <BreadsList path="/breads" />
           <AddBread path="/breads/add" />
           <BreadRecipeList path="/breads/:bread_id" />
@@ -62,7 +67,7 @@ export function App() {
           <OrdersList path="/orders" />		
           <OrderElementsList path="/orders/:order_id" />		
           <AddOrder path="/orders/add" />		
-          <AddOrderElement path="/orders/:order_id/add" />		
+          <AddOrderElement path="/orders/:order_id/add" />	
         </Router>
 
       </div>

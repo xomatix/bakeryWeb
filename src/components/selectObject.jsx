@@ -1,8 +1,9 @@
 import { useEffect, useState } from "preact/hooks";
 import SearchBox from "./searchBox";
+import { apiUrlQuery } from "./constants";
 
 
-const SelectObject = ({ objectType, onClickFunction, index }) => {
+const SelectObject = ({ objectType, onClickFunction, index, excludeUsed }) => {
 
     //dataType 
     // 0 clients
@@ -14,6 +15,13 @@ const SelectObject = ({ objectType, onClickFunction, index }) => {
     // 6 recipe_element
     // 7 orders
     // 8 order_element
+    // 9 minimal_stock
+
+    //onClickFunction
+    // function that allows us to set some value in parent object
+
+    //excludeUsed
+    // for datatype combination obj:3 from 9 select only ingredients without definition in 9th data type 
 
     const [isVisible, setIsVisible] = useState(false);
     const [data, setData] = useState([]);
@@ -37,7 +45,7 @@ const SelectObject = ({ objectType, onClickFunction, index }) => {
     const fetchData = async () => {
         //this.setState({ isLoading: true });
 
-        const apiUrl = 'http://localhost:8000/query'; // replace with your actual API endpoint
+        const apiUrl = apiUrlQuery; // replace with your actual API endpoint
 
         let q = ''
         let obj = ''
@@ -56,7 +64,9 @@ const SelectObject = ({ objectType, onClickFunction, index }) => {
                 obj = 'bread_category_id,bread_category_name'
                 break;
             case 3:
-                q = 'select * from ingredients '
+                q = excludeUsed ? 
+                'select i.ingredient_id,i.ingredient_name from ingredients i left join minimal_stock ms ON ms.ingredient_id =i.ingredient_id where ms.minimal_stock_id isnull ;' 
+                : 'select * from ingredients ;'
                 obj = 'ingredient_id,ingredient_name'
                 break;
             case 4:
@@ -131,6 +141,7 @@ const SelectObject = ({ objectType, onClickFunction, index }) => {
             {isVisible && (
                 <div style={{ minWidth: '30%', display: 'block', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px', background: '#1e1e1e', boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)' }}>
                     <p>object Type: {objectType}</p>
+                    <button onClick={fetchData}>🔄️</button>
                     <SearchBox></SearchBox>
                     <table>
                         <tr>

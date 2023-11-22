@@ -1,7 +1,8 @@
 import { useEffect } from "preact/hooks";
+import { apiUrlQuery } from "./constants";
 
 
-const DeleteObject = ({id, dataType}) => {
+const DeleteObject = ({ id, dataType }) => {
 
     // useEffect(() => {
     //     console.log(`id: ${id}, datatype: ${dataType}`)
@@ -12,14 +13,14 @@ const DeleteObject = ({id, dataType}) => {
             alert("No id avaliable")
             return;
         }
-        console.log(dataType )
+        console.log(dataType)
 
         if (dataType === '' || dataType == undefined) {
             alert("No data type avaliable")
             return;
         }
 
-        const apiUrl = 'http://localhost:8000/query';
+        const apiUrl = apiUrlQuery;
 
         let q = 'delete from '
         switch (dataType) {
@@ -49,6 +50,9 @@ const DeleteObject = ({id, dataType}) => {
                 break;
             case 8:
                 q += `order_element where order_elem_id=${id};`
+                break;
+            case 9:
+                q += `minimal_stock where minimal_stock_id=${id};`
                 break;
 
             default:

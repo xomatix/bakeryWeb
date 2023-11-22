@@ -33,14 +33,21 @@ table {
 
 td {
   /* border: #9050b4aa 2px solid; */
+  font-size: large;
   padding: 10px;
+
 }
 
+tr.closedOrder {
+  background-color: rgb(4, 41, 4);
+}
+
+.danger {
+  background-color: #7e1818 ;
+}
 th {
   background-color: #2d2d2d;
-  /* Dark background color */
   color: #ffffff;
-  /* Light text color */
   padding: 12px;
   text-align: left;
 }
@@ -81,7 +88,7 @@ button:hover {
   border: none;
   /* scale: 1.1; */
   box-shadow: 0px 0px 21px 0px rgb(24, 25, 26);
-  transition: all 0.5s;
+  /* transition: all 0.5s; */
 }
 
 .addItem>input {

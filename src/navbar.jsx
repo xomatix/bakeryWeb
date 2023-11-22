@@ -35,6 +35,7 @@ const Navbar = () => {
                     <Link href="/bread_categories">Bread Categories</Link>
                     <Link href="/ingredients">Ingredients</Link>
                     <Link href="/stock">Stock</Link>
+                    <Link href="/minimal_stock">Minimal Stock</Link>
                     <Link href="/breads">Breads</Link>
                     <Link href="/orders">Orders</Link>
                 </nav>

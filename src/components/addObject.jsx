@@ -16,6 +16,7 @@ const AddObject = ({ dataType, id }) => {
     // 6 recipe_element
     // 7 orders
     // 8 order_element
+    // 9 minimal_stock
 
     const [keys, setKeys] = useState([])
     const [headers, setHeaders] = useState([])
@@ -50,7 +51,7 @@ const AddObject = ({ dataType, id }) => {
                 break;
             case 6:
                 setKeys(['ingredient_id', 'amount', 'amount_unit', 'bread_id'])
-                setHeaders(['ingredient_id', 'amount', 'amount_unit'])
+                setHeaders(['ingredient id', 'amount', 'amount unit'])
                 setValuesTypes(['obj:3', 'int', 'str'])
                 let vals = values
                 vals[3] = Number(id.bread_id)
@@ -62,11 +63,15 @@ const AddObject = ({ dataType, id }) => {
                 break;
             case 8:
                 setKeys(['bread_id', 'quantity', 'price', 'staff_id', 'order_id'])
-                setHeaders(['bread_id', 'quantity', 'price', 'staff_id'])
+                setHeaders(['bread id', 'quantity', 'price', 'staff id'])
                 setValuesTypes(['obj:5', 'int', 'int', 'obj:1'])
                 let vals8 = values
                 vals8[4] = Number(id)
                 setValues(vals8)
+                break;
+            case 9:
+                setKeys(['ingredient_id', 'minimal_amount'])
+                setValuesTypes(['obj:3', 'int'])
                 break;
             default:
                 break;
@@ -111,6 +116,9 @@ const AddObject = ({ dataType, id }) => {
                 break;
             case 8:
                 q += `order_element `
+                break;
+            case 9:
+                q += `minimal_stock `
                 break;
 
             default:
@@ -170,7 +178,7 @@ const AddObject = ({ dataType, id }) => {
                 return (<div style={{ display: 'flex' }}>
                     {/* <input type="number" value={values[index]} onInput={(e) => onInputChange(index, e.target.value)} /> */}
                     <SelectObject objectType={Number(varType.split(':')[1])}
-                        onClickFunction={handleClick} index={index}></SelectObject>
+                        onClickFunction={handleClick} index={index} excludeUsed={dataType == 9}></SelectObject>
                 </div>);
 
             default:
