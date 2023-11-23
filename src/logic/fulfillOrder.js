@@ -42,8 +42,11 @@ export async function FulfillOrder(id) {
     stockForIngredients.forEach(sto => {
         sto.amount = sto.amount == null ? 0 : sto.amount
         ingredients.forEach(ing => {
-            if(sto.ingredient_id==ing.ingredient_id && sto.amount<ing.amount){
-                missingMsg+= `${sto.ingredient_id} ${sto.ingredient_name},`
+            if(sto.ingredient_id==ing.ingredient_id ){
+                if (sto.amount<ing.amount) {
+                    missingMsg+= `${sto.ingredient_id} ${sto.ingredient_name},`
+                } 
+                sto.amount = sto.amount - ing.amount;
             }
         });
     });

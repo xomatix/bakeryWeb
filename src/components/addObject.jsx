@@ -2,6 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import SelectObject from "./selectObject";
 import MessageBox from "./messageBox";
 import ToggleComponentButton from './toggleComponentButton'
+import { apiUrlQuery } from "./constants";
 
 
 const AddObject = ({ dataType, id }) => {
@@ -85,7 +86,7 @@ const AddObject = ({ dataType, id }) => {
             return;
         }
 
-        const apiUrl = 'http://localhost:8000/query';
+        const apiUrl = apiUrlQuery;
 
         let q = 'insert into '
         let vals = []

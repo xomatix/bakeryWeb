@@ -46,7 +46,7 @@ const ListObjects = ({ dataType, id }) => {
                 break;
             case 1:
                 q = 'select s.*,sum(oe.quantity) from staff s left join order_element oe  on oe.staff_id =s.staff_id ' 
-                + (id != 0 && id != '' && id != null ? `where staff_id = ${id}` : '') + 'group by s.staff_id ;'
+                + (id != 0 && id != '' && id != null ? `where s.staff_id = ${id} ` : ' ') + ' group by s.staff_id ;'
                 obj = 'staff_id,name,surname,email,breads_prepared'
                 break;
             case 2:
@@ -190,7 +190,9 @@ const ListObjects = ({ dataType, id }) => {
                 {dataType == 3 && <>
                     {data.map(x => {
                         return <tr className="searchItem"><td>{x.ingredient_id}</td> <td>{x.ingredient_name}</td>  <td>{x.amount_unit}</td>
-                            <td className={Number(x.amount_in_stock)<Number(x.minimal_amount)?'danger':''}>{x.amount_in_stock}</td> <td><DeleteObject id={x.ingredient_id} dataType={3} /></td></tr>
+                            <td className={Number(x.amount_in_stock)<Number(x.minimal_amount)?'danger':''}>{x.amount_in_stock}</td> 
+                            {/* <td><DeleteObject id={x.ingredient_id} dataType={3} /></td> */}
+                            </tr>
                     })}
                 </>}
 
