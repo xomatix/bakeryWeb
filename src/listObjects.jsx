@@ -8,7 +8,7 @@ import CloseOrder from "./components/closeOrder";
 import { apiUrlQuery } from "./components/constants";
 
 
-const ListObjects = ({ dataType, id }) => {
+const ListObjects = ({ dataType, id, customerId }) => {
 
     //dataType 
     // 0 clients
@@ -77,8 +77,8 @@ const ListObjects = ({ dataType, id }) => {
                 break;
             case 7:
                 q = `select o.order_id,c.client_id,c.client_name, sum(oe.price*oe.quantity) as sum_of_order,o.order_flag from orders o join clients c on c.client_id = o.client_id 
-                left join order_element oe on oe.order_id = o.order_id GROUP BY
-                  o.order_id,
+                left join order_element oe on oe.order_id = o.order_id ${customerId != null && customerId != '' ? `where o.client_id = ${customerId}` : ''}\
+                GROUP BY o.order_id,
                   c.client_id,
                   oe.order_id order by order_id desc ;`;
                 obj = 'order_id,client_id,client_name,sum_of_order,order_flag'
@@ -169,7 +169,7 @@ const ListObjects = ({ dataType, id }) => {
                     {data.map(x => {
                         return <tr className="searchItem"><td>{x.client_id}</td> <td>{x.client_name}</td> <td>{x.client_address}</td>
                             <td>{x.client_email}</td>
-                            {/* <td><DeleteObject id={x.client_id} dataType={0} /></td> */}
+                            <td><Link href={`/clients/${x.client_id}/orders`}><button >orders</button></Link></td>
                         </tr>
                     })}
                 </>}

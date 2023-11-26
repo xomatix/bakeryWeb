@@ -25,6 +25,7 @@ import AddOrderElement from './routes/addOrderElement'
 import AddOrder from './routes/addOrder'
 import MinimalStock from './routes/mnimalStock'
 import AddMinimalStock from './routes/addMinimalStock'
+import OrdersForClientList from './routes/ordersForClient'
 
 export function App() {
 
@@ -40,6 +41,7 @@ export function App() {
           <Card path="/" />
           <ListObjects path="/clients" dataType={0}  />
           <ListObjects path="/clients/:id" dataType={0}  />
+          <OrdersForClientList path="/clients/:customer_id/orders" />
           <AddClient path="/clients/add" />	
 
           <StaffList path="/staff" />

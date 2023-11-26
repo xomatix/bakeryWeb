@@ -20,7 +20,7 @@ export async function FulfillOrder(id) {
     let ingredients = await queryData(q,obj);
     queriesMade+=q+"\n"
 
-    // console.log("what i need" )
+    // console.log("what i need   ")
     // console.log(ingredients)
 
     //recalculate ingredients needed
@@ -61,8 +61,8 @@ export async function FulfillOrder(id) {
     let stock = await queryData(q,obj);
     queriesMade+=q+"\n"
 
-    // console.log("stock przed:")
-    // console.log(stock)
+    console.log("stock przed:")
+    console.log(stock)
 
     let updateQuery = "" 
     stock.forEach(stockElem => {
@@ -71,10 +71,12 @@ export async function FulfillOrder(id) {
                 
                 if (ing.amount > 0 && ing.amount > stockElem.amount) {
                     ing.amount = ing.amount - stock.amount;
-                    stockElem = 0;
+                    stockElem.amount = 0;
                     updateQuery += `UPDATE stock \
                     SET amount = 0 \
                     WHERE stock_ingredient_id=${stockElem.stock_ingredient_id};`
+                    console.log("pierwszy")
+
                 }
 
                 else if (ing.amount > 0 && ing.amount < stockElem.amount) {
@@ -83,6 +85,7 @@ export async function FulfillOrder(id) {
                     updateQuery += `UPDATE stock \
                     SET amount = ${stockElem.amount} \
                     WHERE stock_ingredient_id=${stockElem.stock_ingredient_id};`
+                    console.log("drugi")
                 }
             }
         });
