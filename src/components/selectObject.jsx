@@ -1,9 +1,10 @@
 import { useEffect, useState } from "preact/hooks";
 import SearchBox from "./searchBox";
 import { apiUrlQuery } from "./constants";
+import { LoadQueryFromCache, SetQueryToStorage } from "../logic/queryCache";
 
 
-const SelectObject = ({ objectType, onClickFunction, index, excludeUsed }) => {
+const SelectObject = ({ objectType, onClickFunction, index, excludeUsed, objectId }) => {
 
     //dataType 
     // 0 clients
@@ -38,9 +39,21 @@ const SelectObject = ({ objectType, onClickFunction, index, excludeUsed }) => {
         setIsVisible(false);
     };
 
-    useEffect(() => {
-        fetchData();
+    useEffect(async () => {
+        await fetchData();
     }, [])
+
+    useEffect(() => {
+
+        if (objectId != null && objectId != undefined)
+            data.forEach(x => {
+                if (x.ingredient_id == objectId) {
+                    setValue(x.ingredient_id + ":" + x.ingredient_name)
+                }
+            });
+        //console.log(data)
+
+    }, [data])
 
     const fetchData = async () => {
         //this.setState({ isLoading: true });
@@ -64,9 +77,9 @@ const SelectObject = ({ objectType, onClickFunction, index, excludeUsed }) => {
                 obj = 'bread_category_id,bread_category_name'
                 break;
             case 3:
-                q = excludeUsed ? 
-                'select i.ingredient_id,i.ingredient_name from ingredients i left join minimal_stock ms ON ms.ingredient_id =i.ingredient_id where ms.minimal_stock_id isnull ;' 
-                : 'select * from ingredients ;'
+                q = excludeUsed ?
+                    'select i.ingredient_id,i.ingredient_name from ingredients i left join minimal_stock ms ON ms.ingredient_id =i.ingredient_id where ms.minimal_stock_id isnull ;'
+                    : 'select * from ingredients ;'
                 obj = 'ingredient_id,ingredient_name'
                 break;
             case 4:
@@ -105,6 +118,17 @@ const SelectObject = ({ objectType, onClickFunction, index, excludeUsed }) => {
 
         console.log(q)
 
+        setHeaders(customHeaders != '' ? customHeaders.split(',') : obj.split(','))
+        //set data from cache
+        var loades = await LoadQueryFromCache(q, obj);
+        // console.log(loades)
+        setData(loades.data)
+
+        if ((Number(loades.requestDate) + 5000) > Date.now()) {
+            console.log("skipping data reload " + (Number(loades.requestDate) + 5000) + " - " + Date.now())
+            return;
+        }
+
         // Set up the POST request
         const requestOptions = {
             method: 'POST',
@@ -122,8 +146,9 @@ const SelectObject = ({ objectType, onClickFunction, index, excludeUsed }) => {
             .then((response) => response.json())
             .then((d) => {
                 setData(d);
-                console.log(d)
-                setHeaders(customHeaders != '' ? customHeaders.split(',') : Object.keys(d.at(0)))
+                //console.log(d)
+                SetQueryToStorage(q, obj, d);
+
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
@@ -136,10 +161,10 @@ const SelectObject = ({ objectType, onClickFunction, index, excludeUsed }) => {
             <div style={{ display: 'flex' }}>
 
                 <button onClick={handleButtonClick}>🔎</button>
-                <p style={{ marginLeft: '10px' }}>ID: {value}</p>
+                <p style={{ marginLeft: '10px' }}>{value}</p>
             </div>
             {isVisible && (
-                <div style={{ minWidth: '30%', display: 'block', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px', background: '#1e1e1e', boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)' }}>
+                <div style={{ minWidth: '30%', display: 'block', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px', background: '#1e1e1e', boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)' }}>
                     <p>object Type: {objectType}</p>
                     <button onClick={fetchData}>🔄️</button>
                     <SearchBox></SearchBox>

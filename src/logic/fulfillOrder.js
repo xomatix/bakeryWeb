@@ -117,7 +117,7 @@ export async function FulfillOrder(id) {
 }
 
 
-async function queryData(qSql, objText ) {
+export async function queryData(qSql, objText ) {
     let data = []
 
     const apiUrl = apiUrlQuery; // replace with your actual API endpoint

@@ -26,6 +26,7 @@ import AddOrder from './routes/addOrder'
 import MinimalStock from './routes/mnimalStock'
 import AddMinimalStock from './routes/addMinimalStock'
 import OrdersForClientList from './routes/ordersForClient'
+import BreadRecipeAllList from './routes/breadRecipeAll'
 
 export function App() {
 
@@ -65,6 +66,8 @@ export function App() {
           <AddBread path="/breads/add" />
           <BreadRecipeList path="/breads/:bread_id" />
           <AddRecipeElement path="/breads/:bread_id/add" />
+          
+          <BreadRecipeAllList path="/recipe_elements" />
 
           <OrdersList path="/orders" />		
           <OrderElementsList path="/orders/:order_id" />		

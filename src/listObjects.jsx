@@ -6,9 +6,12 @@ import SearchBox from "./components/searchBox";
 import { getNthBit } from "./logic/bitOperators";
 import CloseOrder from "./components/closeOrder";
 import { apiUrlQuery } from "./components/constants";
+import SelectObject from "./components/selectObject";
+import { LoadQueryFromCache, SetQueryToStorage } from "./logic/queryCache";
+import { UpdateRecipeElement } from "./logic/updateRecipeElements";
 
 
-const ListObjects = ({ dataType, id, customerId }) => {
+const ListObjects = ({ dataType, id, customerId, displayAll }) => {
 
     //dataType 
     // 0 clients
@@ -71,9 +74,11 @@ const ListObjects = ({ dataType, id, customerId }) => {
                 customHeaders = 'bread_id,bread_name,bread_category_id,price'
                 break;
             case 6:
-                q = `select recipe_element_id,re.ingredient_id,re.amount ,re.amount_unit ,ingredient_name, b.bread_name  from recipe_element re join ingredients i on re.ingredient_id =i.ingredient_id join breads b on b.bread_id = re.bread_id  where re.bread_id =  ${id}`;
-                obj = 'recipe_element_id,ingredient_id,amount,amount_unit,ingredient_name,bread_name'
-                customHeaders = 'recipe_element_id,ingredient_id,amount,amount_unit'
+                q = displayAll == null || displayAll == undefined ?`select recipe_element_id,re.ingredient_id,re.amount ,re.amount_unit ,ingredient_name, b.bread_name  from recipe_element re join ingredients i on re.ingredient_id =i.ingredient_id join breads b on b.bread_id = re.bread_id  where re.bread_id =  ${id}`
+                :                
+                `select b.bread_name ,i.ingredient_name,re.amount,re.recipe_element_id,re.ingredient_id from recipe_element re join breads b on b.bread_id = re.bread_id join ingredients i on i.ingredient_id =re.ingredient_id order by bread_name,recipe_element_id;`;
+                obj = displayAll == null || displayAll == undefined ? 'recipe_element_id,ingredient_id,amount,amount_unit,ingredient_name,bread_name': 'bread_name,ingredient_name,amount,recipe_element_id,ingredient_id'
+                customHeaders =  displayAll == null || displayAll == undefined ? 'recipe_element_id,ingredient_id,amount,amount_unit': 'bread_name,ingredient_name,amount'
                 break;
             case 7:
                 q = `select o.order_id,c.client_id,c.client_name, sum(oe.price*oe.quantity) as sum_of_order,o.order_flag from orders o join clients c on c.client_id = o.client_id 
@@ -87,9 +92,9 @@ const ListObjects = ({ dataType, id, customerId }) => {
             case 8:
                 q = `select oe.order_elem_id,b.bread_id,b.bread_name,oe.quantity,oe.price,oe.staff_id,s.name,s.surname,o.order_flag  from order_element oe 
                 join breads b on b.bread_id = oe.bread_id join staff s on s.staff_id = oe.staff_id join orders o on o.order_id =oe.order_id 
-                where oe.order_id = ${id};`;
-                obj = 'order_elem_id,bread_id,bread_name,quantity,price,staff_id,name,surname,order_flag'
-                customHeaders = 'order_elem_id,bread_id,quantity,price,staff_id'
+                where oe.order_id = ${id};`
+                obj = 'order_elem_id,bread_id,bread_name,quantity,price,staff_id,name,surname,order_flag' 
+                customHeaders ='order_elem_id,bread_id,quantity,price,staff_id' 
                 break;
             case 9:
                 q = `select ms.minimal_stock_id,i.ingredient_id,ms.minimal_amount,i.ingredient_name from minimal_stock ms join ingredients i  on ms.ingredient_id =i.ingredient_id ;`;
@@ -102,6 +107,18 @@ const ListObjects = ({ dataType, id, customerId }) => {
 
         if (q != '')
             setSql(q);
+
+        setHeaders(customHeaders != '' ? customHeaders.split(',') : obj.split(','))
+        //set data from cache
+        var loades = await LoadQueryFromCache(q, obj);
+        // console.log(loades)
+        setData(loades.data)
+
+        if (Number(loades.requestDate) + 5000 > Date.now()) {
+            console.log("skipping data reload " + (Number(loades.requestDate) + 5000) + " - " + Date.now())
+
+            return;
+        }
 
         // Set up the POST request
         const requestOptions = {
@@ -120,13 +137,13 @@ const ListObjects = ({ dataType, id, customerId }) => {
             .then((response) => response.json())
             .then((d) => {
                 //console.log(d)
+                d.forEach(e => {
+                    e['mod'] = false
+                })
                 setData(d);
 
-                // data.map(x => {
-                //     console.log(x)
-                // })
-                setHeaders(customHeaders != '' ? customHeaders.split(',') : Object.keys(d.at(0)))
-                //console.log(headers.map(x => { return <tr>{x}</tr> }))
+                SetQueryToStorage(q,obj,d);
+                
 
                 // console.log(d[0])
             })
@@ -134,6 +151,32 @@ const ListObjects = ({ dataType, id, customerId }) => {
                 console.error('Error fetching data:', error);
                 //this.setState({ isLoading: false });
             });
+    };
+
+
+    const setAmount = (recipe_element_id, val) => {
+        var d = data;
+        d.forEach(element => {
+            if(element[`recipe_element_id`]==recipe_element_id){
+                element[`amount`] = val
+                //console.log(element)
+                element['mod'] = true
+            }
+        });
+        setData(d);
+    }
+
+    const handleSetIngID = (recipe_element_id, value) => {
+        
+        var d = data;
+        d.forEach(element => {
+            if(element[`recipe_element_id`]==recipe_element_id){
+                element[`ingredient_id`] = value
+                element['mod'] = true
+            }
+        });
+        setData(d);
+        
     };
 
     return (
@@ -211,10 +254,19 @@ const ListObjects = ({ dataType, id, customerId }) => {
                     })}
                 </>}
 
-                {dataType == 6 && <>
+                {(dataType == 6 && (displayAll == null || displayAll == undefined)) && <>
                     {data.map(x => {
                         return <tr className="searchItem"><td>{x.recipe_element_id}</td> <td><Link href={`/ingredients/${x.ingredient_id}`}>{x.ingredient_id}:{x.ingredient_name}</Link></td>
                             <td>{x.amount}</td> <td>{x.amount_unit}</td> <td><DeleteObject id={x.ingredient_id} dataType={6} /></td></tr>
+                    })}
+                </>}
+
+                {(dataType == 6 && displayAll == true ) && <>
+                    {data.map(x => {
+                        return <tr className="searchItem"><td>{x.bread_name}</td> <td><SelectObject index={x.recipe_element_id} onClickFunction={handleSetIngID} objectType={3} objectId={x.ingredient_id}/></td> 
+                        <td><input type="number" value={x.amount} onChange={(e) => {setAmount(x.recipe_element_id,e.target.value)}}></input></td>
+                            {!getNthBit(x.order_flag,0) && <td><DeleteObject id={x.recipe_element_id} dataType={6} /></td>} 
+                            <td ><button onClick={(e) => {e.preventDefault;UpdateRecipeElement(x.recipe_element_id,x.ingredient_id,x.amount);}}>✅</button> </td></tr>
                     })}
                 </>}
 
@@ -234,6 +286,7 @@ const ListObjects = ({ dataType, id, customerId }) => {
                             {!getNthBit(x.order_flag,0) && <td><DeleteObject id={x.order_elem_id} dataType={8} /></td>} </tr>
                     })}
                 </>}
+
 
                 {dataType == 9 && <>
                     {data.map(x => {
