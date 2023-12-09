@@ -2,7 +2,7 @@ import { useEffect } from "preact/hooks";
 import { apiUrlQuery } from "./constants";
 
 
-const DeleteObject = ({ id, dataType }) => {
+const DeleteObject = ({ id, id2, dataType }) => {
 
     // useEffect(() => {
     //     console.log(`id: ${id}, datatype: ${dataType}`)
@@ -43,7 +43,7 @@ const DeleteObject = ({ id, dataType }) => {
                 q += `breads where bread_id=${id};`
                 break;
             case 6:
-                q += `recipe_element where recipe_element_id=${id};`
+                q += id2 != undefined && id2 != null ?  `recipe_element where bread_id=${id} and ingredient_id =${id2};` : ''
                 break;
             case 7:
                 q += `order_element where order_id=${id}; delete from orders where order_id=${id};`

@@ -48,7 +48,8 @@ const SelectObject = ({ objectType, onClickFunction, index, excludeUsed, objectI
         if (objectId != null && objectId != undefined)
             data.forEach(x => {
                 if (x.ingredient_id == objectId) {
-                    setValue(x.ingredient_id + ":" + x.ingredient_name)
+                    // setValue(x.ingredient_id + ":" + x.ingredient_name)
+                    setValue(x.ingredient_name)
                 }
             });
         //console.log(data)

@@ -74,11 +74,11 @@ const ListObjects = ({ dataType, id, customerId, displayAll }) => {
                 customHeaders = 'bread_id,bread_name,bread_category_id,price'
                 break;
             case 6:
-                q = displayAll == null || displayAll == undefined ?`select recipe_element_id,re.ingredient_id,re.amount ,re.amount_unit ,ingredient_name, b.bread_name  from recipe_element re join ingredients i on re.ingredient_id =i.ingredient_id join breads b on b.bread_id = re.bread_id  where re.bread_id =  ${id}`
+                q = displayAll == null || displayAll == undefined ?`select re.ingredient_id,re.amount ,re.amount_unit ,ingredient_name, b.bread_name,b.bread_id  from recipe_element re join ingredients i on re.ingredient_id =i.ingredient_id join breads b on b.bread_id = re.bread_id  where re.bread_id =  ${id}`
                 :                
-                `select b.bread_name ,i.ingredient_name,re.amount,re.recipe_element_id,re.ingredient_id from recipe_element re join breads b on b.bread_id = re.bread_id join ingredients i on i.ingredient_id =re.ingredient_id order by bread_name,recipe_element_id;`;
-                obj = displayAll == null || displayAll == undefined ? 'recipe_element_id,ingredient_id,amount,amount_unit,ingredient_name,bread_name': 'bread_name,ingredient_name,amount,recipe_element_id,ingredient_id'
-                customHeaders =  displayAll == null || displayAll == undefined ? 'recipe_element_id,ingredient_id,amount,amount_unit': 'bread_name,ingredient_name,amount'
+                `select b.bread_name ,i.ingredient_name,re.amount,re.ingredient_id,b.bread_id from recipe_element re join breads b on b.bread_id = re.bread_id join ingredients i on i.ingredient_id =re.ingredient_id order by bread_name;`;
+                obj = displayAll == null || displayAll == undefined ? 'ingredient_id,amount,amount_unit,ingredient_name,bread_name,bread_id': 'bread_name,ingredient_name,amount,ingredient_id,bread_id'
+                customHeaders =  displayAll == null || displayAll == undefined ? 'ingredient_id,amount,amount_unit': 'bread_name,ingredient_name,amount'
                 break;
             case 7:
                 q = `select o.order_id,c.client_id,c.client_name, sum(oe.price*oe.quantity) as sum_of_order,o.order_flag from orders o join clients c on c.client_id = o.client_id 
@@ -256,16 +256,18 @@ const ListObjects = ({ dataType, id, customerId, displayAll }) => {
 
                 {(dataType == 6 && (displayAll == null || displayAll == undefined)) && <>
                     {data.map(x => {
-                        return <tr className="searchItem"><td>{x.recipe_element_id}</td> <td><Link href={`/ingredients/${x.ingredient_id}`}>{x.ingredient_id}:{x.ingredient_name}</Link></td>
-                            <td>{x.amount}</td> <td>{x.amount_unit}</td> <td><DeleteObject id={x.ingredient_id} dataType={6} /></td></tr>
+                        return <tr className="searchItem"><td><Link href={`/ingredients/${x.ingredient_id}`}>{x.ingredient_id}:{x.ingredient_name}</Link></td>
+                            <td>{x.amount}</td> <td>{x.amount_unit}</td> <td><DeleteObject id={x.bread_id} id2={x.ingredient_id} dataType={6} /></td></tr>
                     })}
                 </>}
 
                 {(dataType == 6 && displayAll == true ) && <>
                     {data.map(x => {
-                        return <tr className="searchItem"><td>{x.bread_name}</td> <td><SelectObject index={x.recipe_element_id} onClickFunction={handleSetIngID} objectType={3} objectId={x.ingredient_id}/></td> 
+                        return <tr className="searchItem"><td><Link href={`/breads/${x.bread_id}`}>{x.bread_name}</Link></td> 
+                        <td><Link href={`/ingredients/${x.ingredient_id}`}>{x.ingredient_name}</Link></td> 
+                        {/* <td><SelectObject index={x.recipe_element_id} onClickFunction={handleSetIngID} objectType={3} objectId={x.ingredient_id}/></td>  */}
                         <td><input type="number" value={x.amount} onChange={(e) => {setAmount(x.recipe_element_id,e.target.value)}}></input></td>
-                            {!getNthBit(x.order_flag,0) && <td><DeleteObject id={x.recipe_element_id} dataType={6} /></td>} 
+                            {!getNthBit(x.order_flag,0) && <td><DeleteObject id={x.bread_id} id2={x.ingredient_id} dataType={6} /></td>} 
                             <td ><button onClick={(e) => {e.preventDefault;UpdateRecipeElement(x.recipe_element_id,x.ingredient_id,x.amount);}}>✅</button> </td></tr>
                     })}
                 </>}
